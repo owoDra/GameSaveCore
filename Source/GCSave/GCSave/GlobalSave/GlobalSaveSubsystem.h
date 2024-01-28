@@ -71,6 +71,15 @@ public:
 	}
 
 	/**
+	 * Get save game object from class
+	 */
+	template<typename T>
+	T* GetSave(bool bShouldLoadIfNotLoaded = true)
+	{
+		return Cast<T>(GetGlobalSave(T::StaticClass(), FString(), bShouldLoadIfNotLoaded));
+	}
+
+	/**
 	 * Load save games synchronously.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Global Save", meta = (AdvancedDisplay = "bShouldLoadIfNotLoaded", DeterminesOutputType = "GlobalSaveClass"))

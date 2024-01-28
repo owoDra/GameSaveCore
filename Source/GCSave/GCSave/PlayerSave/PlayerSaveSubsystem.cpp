@@ -1,4 +1,4 @@
-// Copyright (C) 2024 owoDra
+﻿// Copyright (C) 2024 owoDra
 
 #include "PlayerSaveSubsystem.h"
 
@@ -290,6 +290,7 @@ UPlayerSave* UPlayerSaveSubsystem::CreateNewSaveObject(TSubclassOf<UPlayerSave> 
 
 	if (ensure(LoadedSave))
 	{
+		LoadedSave->ResetToDefault();
 		HandlePlayerSaveLoaded(Slotname, LoadedSave);
 	}
 

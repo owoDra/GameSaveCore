@@ -1,4 +1,4 @@
-// Copyright (C) 2024 owoDra
+﻿// Copyright (C) 2024 owoDra
 
 #include "GlobalSaveSubsystem.h"
 
@@ -290,6 +290,7 @@ UGlobalSave* UGlobalSaveSubsystem::CreateNewSaveObject(TSubclassOf<UGlobalSave> 
 
 	if (ensure(LoadedSave))
 	{
+		LoadedSave->ResetToDefault();
 		HandleGlobalSaveLoaded(Slotname, LoadedSave);
 	}
 
