@@ -80,7 +80,7 @@ public:
 	/**
 	 * Load save games synchronously.
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Global Save", meta = (AdvancedDisplay = "bShouldLoadIfNotLoaded", DeterminesOutputType = "PlayerSaveClass"))
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Player Save", meta = (AdvancedDisplay = "bShouldLoadIfNotLoaded", DeterminesOutputType = "PlayerSaveClass"))
 	UPlayerSave* GetPlayerSave(
 		TSubclassOf<UPlayerSave> PlayerSaveClass
 		, const FString& SlotName
@@ -89,7 +89,7 @@ public:
 	/**
 	 * Load save games synchronously.
 	 */
-	UFUNCTION(BlueprintCallable, Category = "Global Save", meta = (AdvancedDisplay = "bForceLoad", DeterminesOutputType = "PlayerSaveClass"))
+	UFUNCTION(BlueprintCallable, Category = "Player Save", meta = (AdvancedDisplay = "bForceLoad", DeterminesOutputType = "PlayerSaveClass"))
 	UPlayerSave* SyncLoadPlayerSave(
 		TSubclassOf<UPlayerSave> PlayerSaveClass
 		, const FString& SlotName
@@ -110,7 +110,7 @@ public:
 	 * Note:
 	 *	Cannot save if the specified save game has not yet been loaded
 	 */
-	UFUNCTION(BlueprintCallable, Category = "Global Save", meta = (DisplayName = "SaveGameToSlot"))
+	UFUNCTION(BlueprintCallable, Category = "Player Save", meta = (DisplayName = "SaveGameToSlot"))
 	bool SyncSaveGameToSlot(
 		TSubclassOf<UPlayerSave> PlayerSaveClass
 		, const FString& SlotName);
@@ -121,7 +121,7 @@ public:
 	 * Note:
 	 *	Cannot save if the specified save game has not yet been loaded
 	 */
-	UFUNCTION(BlueprintCallable, Category = "Global Save", meta = (DisplayName = "Async Save Global Save"))
+	UFUNCTION(BlueprintCallable, Category = "Player Save", meta = (DisplayName = "Async Save Global Save"))
 	bool AsyncSaveGameToSlot(
 		TSubclassOf<UPlayerSave> PlayerSaveClass
 		, const FString& SlotName);
@@ -134,8 +134,14 @@ public:
 	/**
 	 * Create new save games.
 	 */
-	UFUNCTION(BlueprintCallable, Category = "Global Save", meta = (DeterminesOutputType = "PlayerSaveClass"))
+	UFUNCTION(BlueprintCallable, Category = "Player Save", meta = (DeterminesOutputType = "PlayerSaveClass"))
 	UPlayerSave* CreateSave(TSubclassOf<UPlayerSave> PlayerSaveClass, const FString& SlotName);
+
+	/**
+	 * Release loaded save games.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Player Save")
+	bool ReleaseSave(TSubclassOf<UPlayerSave> PlayerSaveClass, const FString& SlotName);
 
 protected:
 	void AsyncLoadPlayerSaveInternal(
@@ -174,13 +180,13 @@ protected:
 	/**
 	 * Returns whether or not the saved game with the specified slot name is currently loading.
 	 */
-	UFUNCTION(BlueprintCallable, Category = "Global Save|Pending Load")
+	UFUNCTION(BlueprintCallable, Category = "Player Save|Pending Load")
 	bool IsPendingLoad(const FString& Slotname) const;
 
 	/**
 	 * Returns whether there is a PlayerSave currently loaded
 	 */
-	UFUNCTION(BlueprintCallable, Category = "Global Save|Pending Load")
+	UFUNCTION(BlueprintCallable, Category = "Player Save|Pending Load")
 	bool HasPendingLoad() const;
 
 
@@ -199,13 +205,13 @@ protected:
 	/**
 	 * Returns whether or not the saved game with the specified slot name is currently saving.
 	 */
-	UFUNCTION(BlueprintCallable, Category = "Global Save|Pending Save")
+	UFUNCTION(BlueprintCallable, Category = "Player Save|Pending Save")
 	bool IsPendingSave(const FString& Slotname) const;
 
 	/**
 	 * Returns whether there is a PlayerSave currently saved
 	 */
-	UFUNCTION(BlueprintCallable, Category = "Global Save|Pending Save")
+	UFUNCTION(BlueprintCallable, Category = "Player Save|Pending Save")
 	bool HasPendingSave() const;
 
 };

@@ -139,6 +139,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Global Save", meta = (DeterminesOutputType = "GlobalSaveClass"))
 	UGlobalSave* CreateSave(TSubclassOf<UGlobalSave> GlobalSaveClass, const FString& SlotName);
 
+	/**
+	 * Release loaded save games.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Global Save")
+	bool ReleaseSave(TSubclassOf<UGlobalSave> GlobalSaveClass, const FString& SlotName);
+
+
 protected:
 	void AsyncLoadGlobalSaveInternal(
 		TSubclassOf<UGlobalSave> GlobalSaveClass

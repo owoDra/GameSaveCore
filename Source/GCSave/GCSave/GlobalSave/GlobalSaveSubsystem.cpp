@@ -202,6 +202,22 @@ UGlobalSave* UGlobalSaveSubsystem::CreateSave(TSubclassOf<UGlobalSave> GlobalSav
 	return CreateNewSaveObject(GlobalSaveClass, SlotNameToUse);
 }
 
+bool UGlobalSaveSubsystem::ReleaseSave(TSubclassOf<UGlobalSave> GlobalSaveClass, const FString& SlotName)
+{
+	// Suspend if no valid slot name
+
+	const auto SlotNameToUse{ ResolveSlotName(GlobalSaveClass, SlotName) };
+	if (SlotNameToUse.IsEmpty())
+	{
+		UE_LOG(LogGameCore_GlobalSave, Error, TEXT("UGlobalSaveSubsystem::CreateSave: No valid slot name"));
+		return false;
+	}
+
+	ActiveSaves.Remove(SlotNameToUse);
+
+	return true;
+}
+
 
 void UGlobalSaveSubsystem::AsyncLoadGlobalSaveInternal(TSubclassOf<UGlobalSave> GlobalSaveClass, const FString& SlotName, int32 Slot, FGlobalSaveEventDelegate Delegate)
 {

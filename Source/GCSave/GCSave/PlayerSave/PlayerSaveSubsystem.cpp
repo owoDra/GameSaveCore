@@ -202,6 +202,22 @@ UPlayerSave* UPlayerSaveSubsystem::CreateSave(TSubclassOf<UPlayerSave> PlayerSav
 	return CreateNewSaveObject(PlayerSaveClass, SlotNameToUse);
 }
 
+bool UPlayerSaveSubsystem::ReleaseSave(TSubclassOf<UPlayerSave> PlayerSaveClass, const FString& SlotName)
+{
+	// Suspend if no valid slot name
+
+	const auto SlotNameToUse{ ResolveSlotName(PlayerSaveClass, SlotName) };
+	if (SlotNameToUse.IsEmpty())
+	{
+		UE_LOG(LogGameCore_PlayerSave, Error, TEXT("UPlayerSaveSubsystem::CreateSave: No valid slot name"));
+		return false;
+	}
+
+	ActiveSaves.Remove(SlotNameToUse);
+
+	return true;
+}
+
 
 void UPlayerSaveSubsystem::AsyncLoadPlayerSaveInternal(TSubclassOf<UPlayerSave> PlayerSaveClass, const FString& SlotName, int32 Slot, FPlayerSaveEventDelegate Delegate)
 {
