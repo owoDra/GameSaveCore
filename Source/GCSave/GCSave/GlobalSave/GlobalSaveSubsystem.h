@@ -43,6 +43,7 @@ protected:
 	//
 	// List of saved game objects currently loaded
 	//
+	UPROPERTY()
 	TMap<FString, TObjectPtr<UGlobalSave>> ActiveSaves;
 
 public:
