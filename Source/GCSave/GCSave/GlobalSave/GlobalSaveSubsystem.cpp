@@ -282,7 +282,7 @@ UGlobalSave* UGlobalSaveSubsystem::ProcessLoadedSave(USaveGame* BaseSave, const 
 {
 	auto* LoadedSave{ Cast<UGlobalSave>(BaseSave) };
 
-	if (SaveGameClass && (!LoadedSave || !LoadedSave->IsA(SaveGameClass.Get())))
+	if (SaveGameClass && (!LoadedSave || (LoadedSave && !LoadedSave->IsA(SaveGameClass.Get()))))
 	{
 		UE_LOG(LogGameCore_GlobalSave, Warning, TEXT("UGlobalSaveSubsystem::ProcessLoadedSave: Found invalid save game object(%s) in slot(%s)"), *GetNameSafe(LoadedSave), *SlotName);
 		LoadedSave = nullptr;
