@@ -223,16 +223,16 @@ void UGlobalSaveSubsystem::AsyncLoadGlobalSaveInternal(TSubclassOf<UGlobalSave> 
 {
 	if (UGameplayStatics::DoesSaveGameExist(SlotName, Slot))
 	{
-		AddPendingLoad(SlotName);
+		AddPendingLoad(SlotName, GlobalSaveClass);
 
 		auto Lambda
 		{
 			FAsyncLoadGameFromSlotDelegate::CreateWeakLambda(this,
-				[this, GlobalSaveClass, Delegate](const FString& SlotName, const int32 Slot, USaveGame* BaseSave)
+				[this, Delegate](const FString& SlotName, const int32 Slot, USaveGame* BaseSave)
 				{
-					auto* LoadedSave{ this->ProcessLoadedSave(BaseSave, SlotName, GlobalSaveClass) };
+					auto* LoadedSave{ ProcessLoadedSave(BaseSave, SlotName, PendingLoadList.FindRef(SlotName)) };
 
-					this->RemovePendingLoad(SlotName);
+					RemovePendingLoad(SlotName);
 
 					Delegate.ExecuteIfBound(LoadedSave, IsValid(LoadedSave));
 				}
@@ -282,10 +282,13 @@ UGlobalSave* UGlobalSaveSubsystem::ProcessLoadedSave(USaveGame* BaseSave, const 
 {
 	auto* LoadedSave{ Cast<UGlobalSave>(BaseSave) };
 
-	if (SaveGameClass && (!LoadedSave || (LoadedSave && !LoadedSave->IsA(SaveGameClass.Get()))))
+	if (SaveGameClass && LoadedSave)
 	{
-		UE_LOG(LogGameCore_GlobalSave, Warning, TEXT("UGlobalSaveSubsystem::ProcessLoadedSave: Found invalid save game object(%s) in slot(%s)"), *GetNameSafe(LoadedSave), *SlotName);
-		LoadedSave = nullptr;
+		if (!LoadedSave->IsA(SaveGameClass))
+		{
+			UE_LOG(LogGameCore_GlobalSave, Warning, TEXT("UGlobalSaveSubsystem::ProcessLoadedSave: Found invalid save game object(%s) in slot(%s)"), *GetNameSafe(LoadedSave), *SlotName);
+			LoadedSave = nullptr;
+		}
 	}
 
 	if (!LoadedSave)
@@ -330,11 +333,11 @@ FString UGlobalSaveSubsystem::ResolveSlotName(TSubclassOf<UGlobalSave> GlobalSav
 }
 
 
-void UGlobalSaveSubsystem::AddPendingLoad(const FString& Slotname)
+void UGlobalSaveSubsystem::AddPendingLoad(const FString& Slotname, const TSubclassOf<UGlobalSave>& Class)
 {
 	UE_LOG(LogGameCore_GlobalSave, Log, TEXT("Start loading slot(%s)"), *Slotname);
 
-	PendingLoadList.Add(Slotname);
+	PendingLoadList.Add(Slotname, Class);
 }
 
 void UGlobalSaveSubsystem::RemovePendingLoad(const FString& Slotname)

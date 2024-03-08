@@ -175,10 +175,11 @@ protected:
 	//
 	// List of currently loading slot names
 	//
-	TSet<FString> PendingLoadList;
+	UPROPERTY()
+	TMap<FString, TSubclassOf<UGlobalSave>> PendingLoadList;
 
 protected:
-	void AddPendingLoad(const FString& Slotname);
+	void AddPendingLoad(const FString& Slotname, const TSubclassOf<UGlobalSave>& Class);
 	void RemovePendingLoad(const FString& Slotname);
 
 	/**
